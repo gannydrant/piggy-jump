@@ -9,7 +9,7 @@ var mainState = {
 
     create: function() { 
         // Change the background color of the game to blue
-        game.stage.backgroundColor = '#71c5cf';
+        game.stage.backgroundColor = '#B3DEF4';
 
         // Set the physics system
         game.physics.startSystem(Phaser.Physics.ARCADE);
