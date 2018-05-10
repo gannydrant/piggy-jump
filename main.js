@@ -1,30 +1,30 @@
 // Create our 'main' state that will contain the game
-var mainState = {
-    preload: function() { 
-        // Load the bird sprite
-        game.load.image('bird', 'assets/piggy_small.png'); 
+class MainState {
+    preload() { 
+        // Load the piggy sprite
+        game.load.image('piggy', 'assets/piggy_small.png'); 
 
-        game.load.image('pipe', 'assets/pipe.png');
-    },
+        game.load.image('pipe', 'assets/pipe_berry.png');
+    }
 
-    create: function() { 
+    create() { 
         // Change the background color of the game to blue
         game.stage.backgroundColor = '#B3DEF4';
 
         // Set the physics system
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        // Display the bird at the position x=100 and y=245
-        this.bird = game.add.sprite(100, 245, 'bird');
+        // Display the piggy at the position x=100 and y=245
+        this.piggy = game.add.sprite(100, 245, 'piggy');
 
-        // Add physics to the bird
+        // Add physics to the piggy
         // Needed for: movements, gravity, collisions, etc.
-        game.physics.arcade.enable(this.bird);
+        game.physics.arcade.enable(this.piggy);
 
-        // Add gravity to the bird to make it fall
-        this.bird.body.gravity.y = 1000;  
+        // Add gravity to the piggy to make it fall
+        this.piggy.body.gravity.y = 1000;  
 
-        this.bird.anchor.setTo(-0.2, 0.5);
+        this.piggy.anchor.setTo(-0.2, 0.5);
 
         // Call the 'jump' function when the spacekey is hit
         var spaceKey = game.input.keyboard.addKey(
@@ -37,53 +37,64 @@ var mainState = {
 
         this.score = 0;
         this.labelScore = game.add.text(20, 20, "0", { font: "30px Arial", fill: "#ffffff" });
-    },
 
-    update: function() {
-        // If the bird is out of the screen (too high or too low)
+        this.gameOver = false;
+        this.gameOverScore =game.add.text(game.world.centerX, 400, `Score: ${this.score}`, { font: "40px Arial", fill: "#ffffff", align: "center" });
+        this.gameOverScore.visible = false;
+
+    }
+
+    update() {
+        // If the piggy is out of the screen (too high or too low)
         // Call the 'restartGame' function
-        if (this.bird.y < 0 || this.bird.y > 490) {
-            this.restartGame();
+        if (this.piggy.y < 0 || this.piggy.y > 490) {
+            return this.gameOver();
         }
 
-        game.physics.arcade.overlap(this.bird, this.pipes, this.hitPipe, null, this);
+        game.physics.arcade.overlap(this.piggy, this.pipes, this.hitPipe, null, this);
 
-        if (this.bird.angle < 20) {
-            this.bird.angle += 1;
+        if (this.piggy.angle < 20) {
+            this.piggy.angle += 1;
         }
     },
 
-    hitPipe: function() {
-        if (this.bird.alive === false) { return; }
+    hitPipe() {
+        if (this.piggy.alive === false) { return; }
 
-        this.bird.alive = false;
+        this.piggy.alive = false;
 
         game.time.events.remove(this.timer);
 
         this.pipes.forEach(p => p.body.velocity.x = 0);
-    },
+    }
 
-    // Make the bird jump 
-    jump: function() {
-        if (this.bird.alive == false) { return; }
+    // Make the piggy jump 
+    jump() {
+        if (this.piggy.alive == false) { return; }
 
-        // Add a vertical velocity to the bird
-        this.bird.body.velocity.y = -350;
+        // Add a vertical velocity to the piggy
+        this.piggy.body.velocity.y = -350;
 
-        var animation = game.add.tween(this.bird);
+        var animation = game.add.tween(this.piggy);
 
         animation.to({angle: -20}, 100);
 
         animation.start();
-    },
+    }
+
+    gameOver() {
+        this.gameOver = true;
+        this.gameOverScore.visible = true;
+
+    }
 
     // Restart the game
-    restartGame: function() {
+    restartGame() {
         // Start the 'main' state, which restarts the game
         game.state.start('main');
-    },
+    }
 
-    addOnePipe: function(x, y) {
+    addOnePipe(x, y) {
         var pipe = game.add.sprite(x, y, 'pipe');
 
         this.pipes.add(pipe);
@@ -94,9 +105,10 @@ var mainState = {
 
         pipe.checkWorldBounds = true;
         pipe.outOfBoundsKill = true;
-    },
+    }
 
-    addRowOfPipes: function() {
+    addRowOfPipes() {
+        if (this.gameOver === true) { return; }
         var hole = Math.floor(Math.random() * 5) + 1;
 
         for (var i = 0; i < 8; i++) {
@@ -108,13 +120,13 @@ var mainState = {
         this.score += 1;
         this.labelScore.text = this.score;
     }
-};
+}
 
 // Initialize Phaser, and create a 400px by 490px game
 var game = new Phaser.Game(400, 490);
 
 // Add the 'mainState' and call it 'main'
-game.state.add('main', mainState); 
+game.state.add('main', MainState); 
 
 // Start the state to actually start the game
 game.state.start('main');
