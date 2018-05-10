@@ -99,7 +99,7 @@ class GameState {
     // Restart the game
     restartGame() {
         // Start the 'main' state, which restarts the game
-        game.state.start('main');
+        game.state.start('GameState');
     }
 
     addOnePipe(x, y) {
