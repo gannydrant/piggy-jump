@@ -36,11 +36,8 @@ class MainState {
         this.timer = game.time.events.loop(1500, this.addRowOfPipes, this);
 
         this.score = 0;
+        if (!this.highScore) { this.highScore = 0; }
         this.labelScore = game.add.text(20, 20, "0", { font: "30px Arial", fill: "#ffffff" });
-
-        this.gameOver = false;
-        this.gameOverScore =game.add.text(game.world.centerX, 400, `Score: ${this.score}`, { font: "40px Arial", fill: "#ffffff", align: "center" });
-        this.gameOverScore.visible = false;
 
     }
 
@@ -56,7 +53,7 @@ class MainState {
         if (this.piggy.angle < 20) {
             this.piggy.angle += 1;
         }
-    },
+    }
 
     hitPipe() {
         if (this.piggy.alive === false) { return; }
@@ -66,6 +63,7 @@ class MainState {
         game.time.events.remove(this.timer);
 
         this.pipes.forEach(p => p.body.velocity.x = 0);
+        this.gameOver();
     }
 
     // Make the piggy jump 
@@ -83,9 +81,18 @@ class MainState {
     }
 
     gameOver() {
-        this.gameOver = true;
-        this.gameOverScore.visible = true;
+        this.piggy.body.gravity.y = 0;
+        this.piggy.body.velocity.y = 0;
+        game.time.events.remove(this.timer);
 
+        game.add.text(game.world.centerX - 100, game.world.centerY, `Score: ${this.score}`, { font: "30px Arial", fill: "#ffffff", align: "center" });
+
+        if (this.score > this.highScore) { 
+            this.highScore = this.score;
+            game.add.text(game.world.centerX - 100, game.world.centerY + 30, 'New High Score!', { font: "40px Arial", fill: "#ffffff", align: "center" });
+        }
+
+        game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown.add(this.restartGame, this);;
     }
 
     // Restart the game
@@ -108,7 +115,6 @@ class MainState {
     }
 
     addRowOfPipes() {
-        if (this.gameOver === true) { return; }
         var hole = Math.floor(Math.random() * 5) + 1;
 
         for (var i = 0; i < 8; i++) {
