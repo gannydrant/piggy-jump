@@ -4,13 +4,16 @@ class GameState {
         // Load the piggy sprite
         game.load.image('piggy', 'assets/piggy_small.png'); 
 
-        game.load.image('pipe', 'assets/pipe_berry.png');
+        game.load.image('pipe', 'assets/w2.png');
+
+        game.load.image('desk', 'assets/desk_small.png');
 
     }
 
     create() {
         // Change the background color of the game to blue
         game.stage.backgroundColor = '#B3DEF4';
+        game.add.image(0, 490 - 143, 'desk');
 
         // Set the physics system
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -86,11 +89,12 @@ class GameState {
         this.piggy.body.velocity.y = 0;
         game.time.events.remove(this.timer);
 
-        game.add.text(game.world.centerX - 100, game.world.centerY, `Score: ${this.score}`, { font: "30px Arial", fill: "#ffffff", align: "center" });
+        // game.add.text(game.world.centerX - 100, game.world.centerY, `Score: ${this.score}`, { font: "30px Arial", fill: "#ffffff", align: "center" });
+        game.add.bitmapText(game.world.centerX - 100, 200, 'flappyFont', `Score: ${this.score}`, 60);
 
         if (this.score > this.highScore) { 
             this.highScore = this.score;
-            game.add.text(game.world.centerX - 100, game.world.centerY + 30, 'New High Score!', { font: "40px Arial", fill: "#ffffff", align: "center" });
+            game.add.bitmapText(game.world.centerX - 150, 300, 'flappyFont', 'New High Score!', 80);
         }
 
         game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown.add(this.restartGame, this);
