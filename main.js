@@ -17,7 +17,7 @@ class MainState {
         let walkingPiggy = game.add.sprite(game.world.centerX - 90, game.world.centerY - 200, 'walkingPiggy');
         let walk = walkingPiggy.animations.add('walk');
 
-        game.add.bitmapText(game.world.centerX - 100, 300, 'flappyFont', 'Flappy Pig', 80);
+        game.add.bitmapText(game.world.centerX - 125, 250, 'flappyFont', 'Flappy Pig', 50);
 
         game.add.image(0, 490 - 143, 'desk');
 

@@ -89,12 +89,9 @@ class GameState {
         this.piggy.body.velocity.y = 0;
         game.time.events.remove(this.timer);
 
-        // game.add.text(game.world.centerX - 100, game.world.centerY, `Score: ${this.score}`, { font: "30px Arial", fill: "#ffffff", align: "center" });
-        game.add.bitmapText(game.world.centerX - 100, 200, 'flappyFont', `Score: ${this.score}`, 60);
-
         if (this.score > this.highScore) { 
             this.highScore = this.score;
-            game.add.bitmapText(game.world.centerX - 150, 300, 'flappyFont', 'New High Score!', 80);
+            game.add.bitmapText(game.world.centerX - 150, 300, 'flappyFont', 'New High Score!', 40);
         }
 
         game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown.add(this.restartGame, this);
