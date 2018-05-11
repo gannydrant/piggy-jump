@@ -94,6 +94,10 @@ class GameState {
         }
 
         game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown.add(this.restartGame, this);
+
+        if (window.parent) {
+          window.parent.postMessage({ event_type: 'game_over', event_data: { score: this.score } }, '*');
+        }
     }
 
     // Restart the game
